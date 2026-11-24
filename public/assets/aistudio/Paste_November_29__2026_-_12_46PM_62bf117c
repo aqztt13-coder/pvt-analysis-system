@@ -1,0 +1,1089 @@
+# MASTER DEVELOPMENT PROMPT
+## PVT Reservoir Fluids Division – Integrated Administrative Management System
+
+Act as a Senior Python Software Architect, Full-Stack Developer, Database Designer, UI/UX Designer, and Enterprise Application Security Engineer.
+
+Your task is to design and develop a complete, professional, production-ready administrative management system for the **Reservoir Fluids Division (PVT Laboratory)** of a major oil company.
+
+The application must manage all administrative activities, employees, equipment, documents, reports, correspondence, inventory, maintenance, and internal operations of the division.
+
+**IMPORTANT: This is an administrative management system ONLY. It is NOT a petroleum engineering calculation or PVT laboratory analysis application. Do not implement PVT calculations, thermodynamic models, fluid-property calculations, CME, CCE, CVD, DLE, EOS, or other laboratory analysis algorithms.**
+
+The system should be reliable, visually sophisticated, secure, modular, easy to maintain, and suitable for daily use in an oil company environment.
+
+---
+
+# 1. CORE REQUIREMENTS
+
+The application must satisfy the following requirements:
+
+- Developed primarily using Python.
+- Fully operational without an internet connection.
+- Accessible from Windows, Linux, macOS, tablets, and smartphones.
+- Responsive interface that adapts automatically to different screen sizes.
+- Support multiple users accessing the same centralized database simultaneously.
+- Operate entirely within a local office network (LAN).
+- No cloud services, external APIs, online authentication, or external dependencies at runtime.
+- No online activation or mandatory internet-based licensing.
+- All application assets, fonts, icons, libraries, and resources must be stored locally.
+- Arabic must be the primary interface language, with proper Right-to-Left (RTL) support.
+- Support a professional English technical terminology option where appropriate.
+
+## Recommended Architecture
+
+Build the system as a Python-based local network web application.
+
+Backend:
+- Python 3.12 or a compatible stable Python version.
+- FastAPI.
+- SQLAlchemy 2.x.
+- Alembic for database migrations.
+- Pydantic for data validation.
+- Uvicorn as the local application server.
+
+Frontend:
+- HTML5.
+- CSS3.
+- Vanilla JavaScript.
+- Jinja2 templates.
+- Locally bundled Bootstrap 5 RTL.
+- Locally bundled icons and fonts.
+
+Do not require Node.js, npm, React, or external CDN resources.
+
+Database:
+- SQLite as the default database, stored securely on the central server.
+- Enable WAL mode, foreign key constraints, appropriate indexes, and a suitable busy timeout.
+- All database operations must pass through the central Python application server.
+- Client devices must never access the database file directly.
+- Design the database layer to support migration to a local PostgreSQL server if future usage requires higher concurrent-write capacity.
+
+The central computer hosts the application and database. Other authorized devices connect using the central computer's local IP address and application port.
+
+The system must never require internet access to operate.
+
+---
+
+# 2. APPLICATION IDENTITY AND DESIGN DIRECTION
+
+Application name:
+
+**PVT RESERVOIR FLUIDS DIVISION**
+**Administrative Management System**
+
+Use a professional corporate identity inspired by the oil and gas industry.
+
+The interface should communicate:
+- Professionalism.
+- Organization.
+- Technical accuracy.
+- Administrative efficiency.
+- Reliability.
+- Industrial and petroleum-sector identity.
+
+Avoid generic dashboard designs, excessive decoration, childish colors, and unnecessary visual effects.
+
+## 2.1 Color Palette
+
+Use the following carefully coordinated palette:
+
+Primary colors:
+- Deep Navy: #102638
+- Petroleum Blue: #17445C
+- Dark Blue: #203C50
+
+Secondary colors:
+- Professional Teal: #078C8C
+- Light Teal: #DDF2F0
+- Steel Blue: #66869A
+
+Accent colors:
+- Warm Gold: #C99A45
+- Soft Amber: #E5B65C
+
+Light theme:
+- Main background: #F3F6F9
+- Content surfaces: #FFFFFF
+- Sidebar: #102638
+- Primary text: #233747
+- Secondary text: #718096
+- Borders: #DFE6EC
+
+Dark theme:
+- Main background: #101A24
+- Content surfaces: #192735
+- Sidebar: #0B1520
+- Primary text: #E8EEF3
+- Secondary text: #A9B7C4
+- Borders: #2C3D4D
+
+Use meaningful status colors:
+- Green for completed and active.
+- Amber for pending and approaching deadlines.
+- Red for overdue, rejected, and critical conditions.
+- Blue for informational states.
+
+Do not rely on color alone to communicate status. Include readable Arabic labels and appropriate icons.
+
+## 2.2 Arabic Typography and RTL Layout
+
+Typography and Arabic presentation are extremely important.
+
+Use a high-quality Arabic font:
+- Primary: IBM Plex Sans Arabic.
+- Alternative: Noto Sans Arabic.
+- Fallback: Tahoma, Arial, sans-serif.
+
+Bundle the selected font files locally. Never load fonts from Google Fonts or external services.
+
+Recommended font sizes:
+- Main page titles: 24–28 px.
+- Section headings: 19–22 px.
+- Card titles: 16–18 px.
+- Normal interface text: 14–16 px.
+- Form labels: 14–15 px.
+- Table content: 13–15 px.
+- Secondary information: 12–13 px.
+
+Use comfortable line spacing (approximately 1.5–1.7 for Arabic text).
+
+Important RTL rules:
+- Set the entire Arabic interface to direction: rtl.
+- Set the document language to Arabic.
+- Navigation sidebar must be on the RIGHT.
+- Breadcrumbs, menus, forms, labels, and buttons must follow RTL direction.
+- Text inputs and text areas must support right-aligned Arabic text.
+- Use appropriate alignment for numbers, serial numbers, email addresses, and English technical identifiers.
+- Ensure mixed Arabic and English text does not produce broken alignment.
+- Use suitable Arabic-aware table and document layouts.
+- Avoid truncated Arabic labels and poorly positioned icons.
+
+The application must have a consistent visual design across every page.
+
+## 2.3 Main Layout
+
+Create a professional administrative dashboard with:
+
+1. Right-side navigation sidebar.
+2. Top header bar.
+3. Application logo and division name.
+4. Current page title.
+5. Global search.
+6. Notification center.
+7. Current user profile and role.
+8. Light/dark mode toggle.
+9. Main content area.
+10. Responsive navigation for smaller screens.
+
+The sidebar must be collapsible on desktop and converted into a suitable mobile navigation menu.
+
+Use modern cards, tables, forms, modals, confirmation dialogs, pagination, filters, and professional status indicators.
+
+---
+
+# 3. USER AUTHENTICATION AND PERMISSIONS
+
+Implement secure login and role-based access control.
+
+The system must support three main roles:
+
+## 3.1 Division Manager
+
+The manager should have full administrative privileges, including:
+
+- View all division information.
+- Create, edit, delete, and archive authorized records.
+- Manage employee records.
+- Approve and reject leave requests.
+- Approve administrative requests.
+- Manage reports and correspondence.
+- Manage equipment and inventory.
+- Review maintenance schedules.
+- Manage application users and permissions.
+- View audit logs.
+- Generate and export reports.
+- Configure system settings.
+- Perform backup and restoration.
+
+## 3.2 Engineer
+
+Engineers should have permissions appropriate to their responsibilities:
+
+- View authorized employee information.
+- Create and update permitted administrative records.
+- Upload reports and documents.
+- Register equipment problems.
+- Submit maintenance requests.
+- Submit leave requests.
+- Create internal tasks and follow-ups.
+- View approved reports and internal documents.
+- Track assigned tasks and requests.
+
+Engineers must not access restricted administrative settings or perform manager-only approvals.
+
+## 3.3 Viewer
+
+Viewers should have read-only access to explicitly authorized information.
+
+They must not:
+- Modify records.
+- Delete information.
+- Approve requests.
+- Manage users.
+- Change system settings.
+- Upload or edit restricted documents.
+
+Permissions must be enforced on the backend, not merely by hiding buttons in the interface.
+
+Do not allow public registration.
+
+Provide a secure initial administrator setup process. Never use a hard-coded universal password. Require the initial administrator to create a secure password and change it when appropriate.
+
+Store passwords using a modern password-hashing algorithm such as Argon2id.
+
+---
+
+# 4. APPLICATION MODULES
+
+Create the following integrated modules.
+
+## 4.1 Main Dashboard
+
+Build an attractive, information-rich administrative dashboard.
+
+Display:
+- Total employees.
+- Active employees.
+- Employees on leave.
+- Number of registered equipment items.
+- Equipment under maintenance.
+- Equipment requiring upcoming calibration.
+- Total archived reports.
+- Recently uploaded documents.
+- Pending administrative requests.
+- Outstanding tasks.
+- Upcoming deadlines.
+- Recent activities.
+
+Include suitable charts and visual summaries.
+
+All dashboard statistics must be calculated from real database records, not hard-coded demonstration values.
+
+Allow authorized users to navigate directly from dashboard statistics to the relevant module.
+
+## 4.2 Employee Management
+
+Create a comprehensive employee database.
+
+Employee information should include:
+
+- Employee ID.
+- Full name in Arabic.
+- Full name in English.
+- Photograph.
+- Job title.
+- Department or section.
+- Academic qualification.
+- Academic specialization.
+- Employee category.
+- Employment status.
+- Employment start date.
+- Date of birth, where authorized.
+- Contact number.
+- Internal extension.
+- Email address.
+- Current workplace.
+- Job description.
+- Emergency contact, where necessary.
+- Administrative notes.
+- Attached documents.
+
+Support:
+- Employee profile pages.
+- Employee document archives.
+- Employment history.
+- Qualifications and certificates.
+- Training records.
+- Leave history.
+- Assigned responsibilities.
+- Search and filtering.
+- Employee lists.
+- Printable employee profiles.
+- Excel and PDF exports.
+
+Protect confidential personal information through role-based access restrictions.
+
+## 4.3 Attendance and Leave Management
+
+Include:
+- Attendance records.
+- Absence records.
+- Official holidays.
+- Leave applications.
+- Annual leave.
+- Sick leave.
+- Emergency leave.
+- Other configurable leave categories.
+- Leave approval workflows.
+- Leave balances, where the applicable company rules are configured.
+- Historical leave records.
+- Printable leave reports.
+
+Do not assume company-specific leave policies. Make leave types, rules, and balances configurable by authorized administrators.
+
+Attendance records should support authorized manual entry and corrections. Do not require biometric devices.
+
+## 4.4 Equipment Management
+
+Create a dedicated equipment inventory and management system.
+
+Each equipment record should include:
+
+- Equipment ID.
+- Equipment name.
+- Category.
+- Manufacturer.
+- Model.
+- Serial number.
+- Asset number.
+- Acquisition date.
+- Purchase information, if available.
+- Current location.
+- Assigned employee or custodian.
+- Operational status.
+- Warranty information.
+- Equipment photographs.
+- Technical manuals.
+- Certificates.
+- Additional attachments.
+- Administrative notes.
+
+Equipment status options:
+- Operational.
+- Under Maintenance.
+- Out of Service.
+- Under Inspection.
+- Retired.
+
+Provide:
+- Equipment profile pages.
+- Equipment history.
+- Equipment transfer records.
+- Maintenance history.
+- Calibration history.
+- Warranty reminders.
+- Maintenance due-date alerts.
+- Equipment inventory reports.
+
+Important: This module is for equipment administration and asset tracking only. It must not perform laboratory calculations or instrument analysis.
+
+## 4.5 Maintenance Management
+
+Create a maintenance tracking module.
+
+Features:
+- Preventive maintenance schedules.
+- Corrective maintenance requests.
+- Equipment breakdown reports.
+- Maintenance work orders.
+- Requesting employee.
+- Assigned technician or responsible person.
+- Priority level.
+- Maintenance start date.
+- Expected completion date.
+- Actual completion date.
+- Maintenance description.
+- Spare parts used.
+- Costs, when available.
+- Maintenance status.
+- Attached maintenance reports.
+- Maintenance history.
+
+Automatically identify overdue maintenance activities and display appropriate notifications.
+
+## 4.6 Calibration and Inspection Records
+
+Provide administrative tracking for equipment calibration and inspection.
+
+Store:
+- Equipment reference.
+- Calibration date.
+- Calibration due date.
+- Calibration provider.
+- Certificate number.
+- Certificate attachment.
+- Inspection date.
+- Inspection results or administrative status.
+- Responsible person.
+- Notes.
+
+Display upcoming and overdue calibration dates.
+
+Do not calculate calibration corrections or replace instrument calibration software.
+
+## 4.7 Reports and Document Archive
+
+Build a comprehensive document management system.
+
+Support document categories such as:
+- Daily reports.
+- Weekly reports.
+- Monthly reports.
+- Annual reports.
+- Technical reports.
+- Administrative reports.
+- Equipment reports.
+- Maintenance reports.
+- Calibration certificates.
+- Meeting minutes.
+- Internal correspondence.
+- Official letters.
+- Procedures and instructions.
+- Employee documents.
+- Other configurable categories.
+
+Each document record should include:
+- Document title.
+- Document number.
+- Category.
+- Reference number.
+- Creation date.
+- Submission date.
+- Author.
+- Responsible person.
+- Related equipment or employee, where applicable.
+- Description.
+- Tags.
+- Document status.
+- File attachments.
+- Revision number.
+- Approval information.
+
+Provide:
+- Advanced search.
+- Category filtering.
+- Date filtering.
+- Document numbering.
+- Version history.
+- Related-document linking.
+- Secure file access.
+- Preview for supported file types.
+- PDF, DOCX, XLSX, and image attachments.
+- Download and export functionality.
+
+Store uploaded files locally and maintain their references in the database.
+
+Never expose uploaded documents through unrestricted public file paths.
+
+## 4.8 Correspondence Management
+
+Create an incoming and outgoing correspondence register.
+
+Record:
+- Reference number.
+- Correspondence type.
+- Subject.
+- Sender.
+- Recipient.
+- Receiving date.
+- Dispatch date.
+- Related department.
+- Responsible employee.
+- Priority.
+- Required action.
+- Due date.
+- Status.
+- Attachments.
+- Notes.
+
+Support:
+- Incoming correspondence.
+- Outgoing correspondence.
+- Internal memoranda.
+- Official letters.
+- Follow-up tracking.
+- Overdue correspondence notifications.
+- Printable correspondence registers.
+
+## 4.9 Inventory and Consumables Management
+
+Build a stock management module for administrative and laboratory consumables.
+
+Record:
+- Item code.
+- Item name.
+- Category.
+- Description.
+- Unit of measurement.
+- Available quantity.
+- Minimum stock level.
+- Storage location.
+- Supplier.
+- Purchase date.
+- Expiry date, where applicable.
+- Issue records.
+- Receiving records.
+- Responsible person.
+
+Features:
+- Stock receipts.
+- Stock issues.
+- Stock adjustments with audit records.
+- Current stock balance.
+- Low-stock alerts.
+- Expiry alerts.
+- Inventory movement history.
+- Inventory reports.
+
+Do not automatically alter stock quantities without creating a corresponding transaction record.
+
+## 4.10 Procurement and Administrative Requests
+
+Include:
+- Purchase requests.
+- Equipment requests.
+- Consumables requests.
+- Maintenance requests.
+- Internal administrative requests.
+- Requesting employee.
+- Description and justification.
+- Priority.
+- Submission date.
+- Approval workflow.
+- Current status.
+- Responsible manager.
+- Attachments.
+- Decision notes.
+
+Support request statuses such as Draft, Submitted, Under Review, Approved, Rejected, and Completed.
+
+## 4.11 Meetings and Tasks
+
+Create a module for:
+- Division meetings.
+- Meeting dates.
+- Meeting agendas.
+- Attendees.
+- Meeting minutes.
+- Decisions.
+- Assigned actions.
+- Responsible employees.
+- Deadlines.
+- Completion status.
+
+Create an internal task tracker with:
+- Task title.
+- Description.
+- Assigned employee.
+- Priority.
+- Start date.
+- Due date.
+- Status.
+- Related documents.
+- Completion notes.
+
+Provide a calendar-style view and overdue-task alerts.
+
+## 4.12 Training and Employee Development
+
+Manage:
+- Training courses.
+- Course providers.
+- Training locations.
+- Employee participation.
+- Training dates.
+- Certificates.
+- Completion status.
+- Training history.
+- Required competencies.
+- Upcoming training opportunities.
+
+Provide employee-specific and division-wide training reports.
+
+## 4.13 Health, Safety, and Inspection Records
+
+Provide administrative records for:
+- Safety inspections.
+- Safety observations.
+- Incident reports.
+- Corrective actions.
+- Safety training.
+- PPE distribution records.
+- Inspection dates.
+- Responsible employees.
+- Follow-up status.
+- Attachments.
+
+This module is for administrative recordkeeping, not a replacement for specialized HSE risk-assessment systems.
+
+## 4.14 Notifications Center
+
+Create an integrated notification system for:
+
+- Pending approvals.
+- Leave requests.
+- Overdue tasks.
+- Upcoming deadlines.
+- Maintenance schedules.
+- Calibration due dates.
+- Low inventory.
+- Document review dates.
+- Expiring warranties.
+
+Notifications must be generated from actual records and configured dates.
+
+Provide read/unread status, timestamps, filtering, and direct navigation to the relevant record.
+
+## 4.15 System Administration and Audit Logs
+
+Create a system administration module with:
+
+- User management.
+- Role management.
+- Permission management.
+- Application settings.
+- Document category management.
+- Equipment category management.
+- Employee status settings.
+- Backup management.
+- Restore management.
+- System activity logs.
+
+Record important operations:
+- Login and logout.
+- Failed login attempts.
+- Record creation.
+- Record modification.
+- Record deletion or archiving.
+- Approval and rejection.
+- File uploads and downloads.
+- Backup and restore operations.
+
+Audit entries should include the user, action, record reference, date and time, and an appropriate description.
+
+Ordinary users must not be able to modify or delete audit logs.
+
+---
+
+# 5. ADVANCED SEARCH AND DATA MANAGEMENT
+
+Implement a global search system capable of finding authorized records across:
+
+- Employees.
+- Equipment.
+- Reports.
+- Documents.
+- Correspondence.
+- Maintenance records.
+- Inventory.
+- Tasks.
+- Requests.
+
+Provide advanced filtering by:
+- Date range.
+- Category.
+- Status.
+- Responsible employee.
+- Reference number.
+- Equipment ID.
+- Document number.
+
+Include:
+- Pagination.
+- Sorting.
+- Column visibility settings where useful.
+- Export of filtered results.
+- Duplicate-entry prevention where appropriate.
+- Database validation.
+- Safe archive operations.
+
+Use proper database indexes for frequently searched fields.
+
+---
+
+# 6. REPORTING AND EXPORTS
+
+Provide professional, print-ready reports.
+
+Supported outputs:
+
+1. PDF.
+2. Excel (XLSX).
+3. Word (DOCX), where appropriate.
+4. Direct browser printing.
+
+Reports should include:
+- Division name.
+- Company identification fields configurable by the administrator.
+- Report title.
+- Document number.
+- Creation date.
+- Reporting period.
+- Prepared-by information.
+- Relevant tables and summaries.
+- Page numbers.
+- Footer.
+- Signature and approval areas where appropriate.
+
+Arabic output must render correctly.
+
+For PDF generation, embed a locally bundled Arabic font and implement appropriate Arabic text shaping and bidirectional handling.
+
+For Word documents, correctly configure right-to-left paragraphs and tables.
+
+Excel worksheets containing Arabic data should be configured for right-to-left display.
+
+Allow managers to generate reports for specific date ranges, employees, equipment categories, inventory movements, maintenance activities, and other administrative modules.
+
+---
+
+# 7. BACKUP, RESTORE, AND DATA PROTECTION
+
+Data preservation is critical.
+
+Implement:
+
+- Manual backup.
+- Scheduled automatic backup.
+- Backup of the database and all uploaded documents.
+- Timestamped backup filenames.
+- Configurable backup retention.
+- Backup destination configuration.
+- Backup history.
+- Backup integrity verification.
+- Restore from a selected backup.
+- Confirmation before restoration.
+- Automatic safety backup before restoration.
+
+Use the appropriate SQLite backup mechanism while the application is running. Do not rely on blindly copying an active database file.
+
+The application must clearly report backup success or failure.
+
+Keep application code, configuration, uploaded documents, backups, and database files separated.
+
+Never overwrite existing business data during an application update.
+
+---
+
+# 8. RESPONSIVE DESIGN AND DEVICE COMPATIBILITY
+
+The application must provide a consistent experience on:
+
+- Windows desktop computers.
+- Windows laptops.
+- Linux computers.
+- macOS computers.
+- Android smartphones.
+- iPhones.
+- Android tablets.
+- iPads.
+
+Support current versions of Chrome, Edge, Firefox, and Safari where practical.
+
+Responsive requirements:
+
+Desktop:
+- Full navigation sidebar.
+- Professional dashboard grid.
+- Detailed data tables.
+- Multi-column forms.
+
+Tablet:
+- Collapsible navigation.
+- Adaptive cards.
+- Responsive forms and tables.
+
+Mobile:
+- Compact navigation.
+- Touch-friendly buttons and controls.
+- Single-column layouts.
+- Readable typography.
+- Mobile-friendly forms.
+- Tables that become responsive cards or use controlled horizontal scrolling.
+- No overlapping elements or clipped Arabic text.
+
+Provide suitable minimum touch target sizes of approximately 44 × 44 pixels.
+
+The application should not require users to install Python, desktop software, or special applications on client devices. Access through a modern web browser should be sufficient.
+
+---
+
+# 9. LOCAL NETWORK OPERATION
+
+The application must be deployed on one designated central computer inside the division's local network.
+
+Example:
+- Central server: 192.168.1.100
+- Application port: 8000
+- Local application URL: http://192.168.1.100:8000
+
+The IP address and port must be configurable.
+
+Requirements:
+- Start and stop the application through simple scripts.
+- Provide automatic startup options on the central computer.
+- Allow authorized LAN devices to connect.
+- Use a stable local IP address or DHCP reservation.
+- Apply firewall rules so the application is not exposed to public networks.
+- Include instructions for first-time setup.
+- Provide a simple connection test.
+- Handle unexpected server shutdowns safely.
+- Ensure the database remains centralized.
+
+Support optional HTTPS using a locally configured certificate where required by company policy.
+
+No remote cloud hosting is needed.
+
+Important distinction: When the internet is unavailable, connected devices on the same working LAN must continue to access the system. Devices outside that LAN cannot access the centralized database unless a separate synchronization solution is implemented.
+
+---
+
+# 10. SECURITY REQUIREMENTS
+
+Implement professional security practices:
+
+- Secure password hashing using Argon2id.
+- Role-based authorization on every protected backend operation.
+- Secure session handling.
+- Session expiration.
+- Login attempt protection.
+- CSRF protection for state-changing requests.
+- Input validation and sanitization.
+- SQL injection prevention using parameterized ORM queries.
+- Secure file upload validation.
+- File size limits.
+- Randomized stored filenames.
+- Protection against path traversal.
+- Restricted access to private attachments.
+- Safe error handling.
+- No passwords or secrets stored in source code.
+- Configurable application secrets.
+- Audit logging.
+- Appropriate database transaction management.
+
+Do not expose detailed technical errors or sensitive information to ordinary users.
+
+Include a clear warning that the central computer and LAN must be properly protected.
+
+---
+
+# 11. USER EXPERIENCE AND INTERFACE DETAILS
+
+Build a premium administrative interface.
+
+Use:
+- Consistent spacing.
+- Rounded but restrained cards.
+- Subtle shadows.
+- Clean borders.
+- Professional tables.
+- Clear form labels.
+- Carefully selected icons.
+- Smooth but subtle transitions.
+- Clear confirmation dialogs.
+- Helpful empty states.
+- Consistent success and error messages.
+
+Every page must have:
+- A clear title.
+- A short description.
+- Relevant actions.
+- Search and filtering where useful.
+- A consistent navigation structure.
+
+Forms must support:
+- Required-field indicators.
+- Validation messages in Arabic.
+- Appropriate input types.
+- Date pickers.
+- Dropdown lists.
+- File uploads.
+- Save and cancel actions.
+- Clear editing and viewing modes.
+
+Provide loading states, error states, and empty states.
+
+Do not create decorative buttons that do nothing. Every displayed action must be implemented and connected to its actual functionality.
+
+---
+
+# 12. SOFTWARE ARCHITECTURE AND PROJECT STRUCTURE
+
+Use a modular architecture.
+
+Suggested project structure:
+
+pvt_division_management/
+│
+├── app/
+│   ├── main.py
+│   ├── config.py
+│   ├── database.py
+│   ├── dependencies.py
+│   │
+│   ├── models/
+│   ├── schemas/
+│   ├── routers/
+│   ├── services/
+│   ├── repositories/
+│   ├── security/
+│   ├── permissions/
+│   ├── reports/
+│   ├── notifications/
+│   │
+│   ├── templates/
+│   │   ├── layouts/
+│   │   ├── dashboard/
+│   │   ├── employees/
+│   │   ├── equipment/
+│   │   ├── documents/
+│   │   └── other_modules/
+│   │
+│   └── static/
+│       ├── css/
+│       ├── js/
+│       ├── fonts/
+│       ├── icons/
+│       └── images/
+│
+├── migrations/
+├── instance/
+│   ├── data/
+│   ├── uploads/
+│   ├── backups/
+│   └── logs/
+│
+├── tests/
+├── scripts/
+├── requirements.txt
+├── .env.example
+├── README.md
+├── run_server.bat
+├── stop_server.bat
+└── run_server.sh
+
+You may improve this structure when necessary, but keep the architecture modular, understandable, and maintainable.
+
+Never place sensitive production data inside the source-code directory.
+
+---
+
+# 13. TESTING AND QUALITY ASSURANCE
+
+Implement actual functionality, not a visual prototype.
+
+Create tests for:
+- Authentication.
+- Role permissions.
+- Employee management.
+- Equipment management.
+- Document uploads and downloads.
+- Database operations.
+- Search and filtering.
+- Report generation.
+- Backup and restoration.
+- Notification generation.
+- Multi-user access.
+- Responsive interface behavior.
+
+Test the following scenarios:
+
+1. Manager logs in and accesses all authorized modules.
+2. Engineer logs in and performs permitted actions.
+3. Viewer logs in and cannot modify protected information.
+4. Two users access the application simultaneously from different devices.
+5. An engineer uploads a report and the manager can access it.
+6. Equipment maintenance dates generate the correct alerts.
+7. Backup and restoration preserve the database and uploaded documents.
+8. The application continues working without internet access.
+9. Arabic text is displayed correctly in every module.
+10. The interface adapts correctly to desktop, tablet, and mobile screens.
+
+Do not claim that a test has passed unless it has actually been executed.
+
+Fix errors before delivering a module.
+
+---
+
+# 14. DEVELOPMENT AND DELIVERY INSTRUCTIONS
+
+Develop the application systematically.
+
+Follow these development phases:
+
+**Phase 1: Architecture and Database**
+- Finalize the project structure.
+- Design relational database tables.
+- Define entity relationships.
+- Implement authentication.
+- Implement role-based permissions.
+- Configure the local database.
+
+**Phase 2: UI Foundation**
+- Create the login page.
+- Build the main layout.
+- Implement Arabic RTL.
+- Configure typography and color themes.
+- Implement responsive navigation.
+- Create light and dark modes.
+
+**Phase 3: Core Administrative Modules**
+- Employee management.
+- Attendance and leave.
+- Equipment management.
+- Maintenance and calibration.
+- Document archive.
+- Correspondence.
+
+**Phase 4: Additional Administrative Modules**
+- Inventory.
+- Procurement requests.
+- Meetings and tasks.
+- Training.
+- Safety records.
+- Notifications.
+
+**Phase 5: Reporting and Security**
+- PDF, Excel, and Word exports.
+- Audit logs.
+- Security improvements.
+- Advanced search.
+- Data validation.
+
+**Phase 6: Backup and Deployment**
+- Automatic backups.
+- Restoration tools.
+- LAN deployment.
+- Startup scripts.
+- Installation documentation.
+- Final testing.
+
+## Mandatory Development Rules
+
+1. Build real, functioning modules rather than mockups.
+2. Do not use fake database records as permanent application data.
+3. Do not leave nonfunctional buttons or incomplete forms.
+4. Do not omit files or replace required code with placeholders.
+5. Maintain consistent naming conventions.
+6. Use database migrations for schema changes.
+7. Preserve existing records during upgrades.
+8. Provide complete source code and installation instructions.
+9. Provide a requirements.txt with compatible dependency versions.
+10. Include clear error handling and useful logging.
+11. Do not introduce unnecessary complexity.
+12. Keep all essential features available offline.
+13. Explain how to run, stop, back up, and restore the application.
+14. Make sensible implementation decisions instead of repeatedly asking for minor design approvals.
+
+At the end of every development phase:
+- List the files created or modified.
+- Explain the completed functionality.
+- Provide the exact commands to run.
+- Execute relevant tests.
+- Report any remaining limitations honestly.
+
+**FINAL OBJECTIVE:**
+
+Deliver a complete, secure, professional, Arabic-first, RTL administrative management system for a Reservoir Fluids Division in an oil company.
+
+It must centralize all division administrative information in one reliable local database, support multiple authorized devices through the local network, operate without internet access, and provide a polished corporate interface suitable for daily professional use.
